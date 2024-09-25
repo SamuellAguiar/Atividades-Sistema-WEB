@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Estado {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  sigla     String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  cidades   Cidade[]
+  @@map("estados")
+}
+
+model Cidade {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  estado_id Int
+  estado    Estado   @relation(fields: [estado_id], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  locais_coleta LocalColeta[]
+  pessoas    Pessoa[]
+  @@map("cidades")
+}
+
+model LocalColeta {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  rua       String
+  numero    String
+  complemento String
+  cidade_id Int
+  cidade    Cidade   @relation(fields: [cidade_id], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  doacoes   Doacao[]
+}
+
+model TipoSanguineo {
+  id        Int      @id @default(autoincrement())
+  tipo      String
+  fator     String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  pessoas   Pessoa[]
+}
+
+model Pessoa {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  rua       String
+  numero    String
+  complemento String
+  rg        String
+  cidade_id Int
+  cidade    Cidade   @relation(fields: [cidade_id], references: [id])
+  tipo_id   Int
+  tipo      TipoSanguineo @relation(fields: [tipo_id], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  doacoes   Doacao[]
+  @@map("pessoas")
+}
+
+model Doacao {
+  id        Int      @id @default(autoincrement())
+  pessoa_id Int
+  pessoa    Pessoa   @relation(fields: [pessoa_id], references: [id])
+  local_id  Int
+  local     LocalColeta @relation(fields: [local_id], references: [id])
+  data      DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  @@map("doacoes")
+}
