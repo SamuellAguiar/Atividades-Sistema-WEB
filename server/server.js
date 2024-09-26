@@ -28,5 +28,5 @@ server.use(doacaoRouter);
 
 
 server.listen(PORT, () => {
-     console.log(`[SERVER] Server is running on port ${PORT}`)
+     console.log(`Servidor rodando na porta ${PORT}!`)
 })
