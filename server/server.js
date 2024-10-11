@@ -10,6 +10,9 @@ import { doacaoRouter } from './src/routes/doacoes.js';
 const server = express();
 const PORT = 5000
 
+server.use(express.json())
+server.use(cors());
+
 // Routes
 server.get('/', (request, response) => {
      response.json({
@@ -17,8 +20,6 @@ server.get('/', (request, response) => {
      })
 })
 
-server.use(express.json())
-server.use(cors());
 server.use(estadoRouter);
 server.use(cidadeRouter);
 server.use(pessoaRouter);
